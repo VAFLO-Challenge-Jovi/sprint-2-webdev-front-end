@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SeekVision — Scanner OCR</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header>
+    <nav class="navbar">
+      <div class="nav-inner">
+        <a href="index.html" class="nav-logo">
+          <span>Seek<em>Vision</em></span>
+        </a>
+
+        <ul class="nav-links" id="nav-links">
+          <li><a href="index.html">Início</a></li>
+          <li><a href="camera.html" class="active">Scanner</a></li>
+          <li><a href="login.html" class="btn btn-primary">Entrar</a></li>
+        </ul>
+
+        <button class="hamburger" id="hamburger" aria-label="Abrir menu">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </nav>
+
+    <nav class="mobile-menu" id="mobile-menu">
+      <a href="index.html">Início</a>
+      <a href="camera.html" class="active">Scanner OCR</a>
+    </nav>
+  </header>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="page-header-inner">
+      <span class="label">Scanner OCR</span>
+      <h1>Detecte e pesquise texto em imagens</h1>
+      <p>Envie uma imagem e escolha uma ação para o texto reconhecido.</p>
+    </div>
+  </div>
+
+  <main>
+    <div class="camera-layout">
+
+      <!-- MAIN CAMERA AREA -->
+      <section class="camera-main" aria-label="Scanner e captura">
+
+        <!-- VIEWFINDER -->
+        <div class="camera-viewfinder" id="viewfinder">
+          <!-- Hidden video/canvas elements (unused but kept for structure) -->
+          <video id="camera-video" autoplay playsinline muted aria-label="Câmera" style="display:none"></video>
+          <canvas id="camera-canvas" aria-hidden="true"></canvas>
+
+          <!-- Captured image display -->
+          <div class="captured-image-wrap" id="captured-wrap">
+            <img id="captured-img" src="" alt="Imagem analisada pelo scanner OCR">
+            <div class="detection-box" id="detection-box" aria-label="Texto detectado"></div>
+          </div>
+
+          <!-- Overlay effects -->
+          <div class="camera-overlay" aria-hidden="true">
+            <div class="scan-frame" id="scan-frame"></div>
+            <div class="scan-line" id="scan-line"></div>
+          </div>
+
+          <!-- Placeholder when no image loaded -->
+          <div class="camera-placeholder" id="camera-placeholder">
+            <strong>Nenhuma imagem carregada</strong>
+            <p>Envie uma imagem para analisar.</p>
+          </div>
+        </div>
+
+        <!-- UPLOAD / RESET CONTROLS -->
+        <div class="camera-action-group" id="camera-start-area" style="display:none">
+          <label class="btn btn-primary" style="flex:1;cursor:pointer" for="upload-input">
+            Enviar imagem
+          </label>
+          <input type="file" id="upload-input" accept="image/*" class="hidden" aria-label="Selecionar imagem do dispositivo">
+        </div>
+
+        <button class="btn btn-secondary hidden" id="btn-reset" style="width:100%">
+          Nova captura
+        </button>
+
+      </section>
+
+      <!-- SIDEBAR -->
+      <aside class="camera-sidebar" aria-label="Resultado e histórico">
+
+        <!-- OCR STATUS + RESULT -->
+        <section class="ocr-result-panel" aria-labelledby="ocr-result-title">
+          <div class="ocr-status">
+            <div class="status-dot ready" id="status-dot" aria-hidden="true"></div>
+            <p id="status-text">Aguardando captura...</p>
+          </div>
+
+          <h4 id="ocr-result-title" style="margin-bottom:10px;font-size:0.85rem;color:var(--text-muted)">Texto detectado</h4>
+
+          <div
+            class="ocr-text-display empty"
+            id="ocr-output"
+            aria-live="polite"
+            aria-label="Texto reconhecido pelo OCR"
+          ></div>
+
+          <div class="ocr-actions" aria-label="Ações disponíveis">
+            <button class="ocr-action-btn" id="btn-search-google" disabled aria-label="Pesquisar texto no Google">
+              <span>Pesquisar no Google</span>
+            </button>
+            <button class="ocr-action-btn" id="btn-copy-text" disabled aria-label="Copiar texto detectado">
+              <span>Copiar texto</span>
+            </button>
+            <button class="ocr-action-btn" id="btn-translate" disabled aria-label="Traduzir texto detectado">
+              <span>Traduzir</span>
+            </button>
+            <button class="ocr-action-btn" id="btn-save-note" disabled aria-label="Salvar como anotação">
+              <span>Salvar no histórico</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- HISTORY -->
+        <section class="history-panel" aria-labelledby="history-title">
+          <div class="history-header">
+            <h4 id="history-title">Histórico de scans</h4>
+            <button class="btn btn-ghost" id="btn-clear-history" style="font-size:0.78rem;padding:4px 10px" aria-label="Limpar todo o histórico">
+              Limpar
+            </button>
+          </div>
+          <div class="history-list" id="history-list" role="list" aria-label="Scans salvos">
+            <div class="history-empty" id="history-empty">
+              Nenhum scan salvo ainda.
+            </div>
+          </div>
+        </section>
+
+        <!-- TIPS -->
+        <section class="card" style="padding:20px" aria-labelledby="tips-title">
+          <h4 id="tips-title" style="margin-bottom:12px;font-size:0.85rem">Dicas de captura</h4>
+          <ul style="display:flex;flex-direction:column;gap:8px;font-size:0.82rem;color:var(--text-secondary)">
+            <li>✓ Use imagens com boa iluminação</li>
+            <li>✓ Prefira imagens nítidas e sem borrão</li>
+            <li>✓ Enquadre apenas o texto que deseja</li>
+            <li>✓ Textos impressos têm maior precisão</li>
+            <li>✓ Formatos JPG e PNG são suportados</li>
+          </ul>
+        </section>
+
+      </aside>
+    </div>
+  </main>
+
+  <!-- CONFIRM CLEAR MODAL -->
+  <div class="modal-overlay" id="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+    <div class="modal">
+      <h3 id="confirm-title">Limpar histórico?</h3>
+      <p>Todos os scans salvos serão removidos permanentemente. Esta ação não pode ser desfeita.</p>
+      <div class="modal-btns">
+        <button class="btn btn-secondary" id="confirm-cancel">Cancelar</button>
+        <button class="btn btn-danger" id="confirm-ok">Limpar tudo</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <script src="js/main.js"></script>
+  <script src="js/camera.js"></script>
+</body>
+</html>
