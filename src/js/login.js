@@ -154,7 +154,7 @@
       email: email.value.trim(),
     }));
     showToast('Login realizado com sucesso!', 'success');
-    setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+    setTimeout(() => { window.location.href = '../../index.html'; }, 1500);
   });
 
   // ── Register form submit ──────────────────────────────
@@ -193,7 +193,7 @@
       email: email.value.trim(),
     }));
     showToast('Conta criada com sucesso!', 'success');
-    setTimeout(() => { window.location.href = 'index.html'; }, 1500);
+    setTimeout(() => { window.location.href = '../../index.html'; }, 1500);
   });
 
 })();
