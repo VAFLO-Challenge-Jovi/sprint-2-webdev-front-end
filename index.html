@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SeekVision — OCR Inteligente para Estudantes</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <header>
+      <nav class="navbar">
+        <div class="nav-inner">
+          <a href="index.html" class="nav-logo">
+            <span>Seek<em>Vision</em></span>
+          </a>
+
+          <ul class="nav-links" id="nav-links">
+            <li><a href="index.html" class="active">Início</a></li>
+            <li><a href="camera.html">Scanner</a></li>
+            <li><a href="login.html" class="btn btn-primary">Entrar</a></li>
+          </ul>
+
+          <button class="hamburger" id="hamburger" aria-label="Abrir menu">
+            <span></span><span></span><span></span>
+          </button>
+        </div>
+      </nav>
+
+      <nav class="mobile-menu" id="mobile-menu" aria-label="Menu mobile">
+        <a href="index.html" class="active">Início</a>
+        <a href="camera.html">Scanner OCR</a>
+      </nav>
+    </header>
+
+    <main>
+      <!-- HERO + SLIDESHOW -->
+      <section class="hero" aria-label="Banner principal">
+        <div class="slideshow" id="slideshow" aria-hidden="true">
+          <div class="slide slide-1 active">
+            <div class="slide-visual">
+              <div class="slide-visual-screen">
+                <div class="slide-visual-img-placeholder">
+                  <img
+                    src="images/default-photo.jpg"
+                    alt="Imagem sendo analisada"
+                  />
+                </div>
+                <span>Detectando texto...</span>
+                <div class="slide-visual-bar">
+                  <div class="slide-visual-bar-fill" style="width: 70%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="slide slide-2">
+            <div class="slide-visual">
+              <div class="slide-visual-screen">
+                <div class="slide-visual-img-placeholder">
+                  <img src="images/default-photo.jpg" alt="Texto encontrado" />
+                </div>
+                <span>Texto encontrado!</span>
+                <div class="slide-visual-bar">
+                  <div class="slide-visual-bar-fill" style="width: 100%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="slide slide-3">
+            <div class="slide-visual">
+              <div class="slide-visual-screen">
+                <div class="slide-visual-img-placeholder">
+                  <img src="images/default-photo.jpg" alt="Pesquisando texto" />
+                </div>
+                <span>Pesquisando...</span>
+                <div class="slide-visual-bar">
+                  <div class="slide-visual-bar-fill" style="width: 45%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="slide slide-4">
+            <div class="slide-visual">
+              <div class="slide-visual-screen">
+                <div class="slide-visual-img-placeholder">
+                  <img
+                    src="images/default-photo.jpg"
+                    alt="Resultado encontrado"
+                  />
+                </div>
+                <span>Resultado encontrado!</span>
+                <div class="slide-visual-bar">
+                  <div class="slide-visual-bar-fill" style="width: 100%"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-overlay" aria-hidden="true"></div>
+
+        <div class="hero-content">
+          <h1>
+            Transforme sua câmera em uma
+            <span class="gradient-text">ferramenta de aprendizado</span>
+          </h1>
+          <p>
+            Aponte para qualquer texto — livros, lousas, slides — e pesquise ou
+            copie instantaneamente. Sem trocar de app.
+          </p>
+          <div class="hero-cta">
+            <a href="camera.html" class="btn btn-primary">Abrir Scanner</a>
+            <a href="#como-funciona" class="btn btn-secondary">Como funciona</a>
+          </div>
+        </div>
+
+        <div
+          class="slide-controls"
+          role="group"
+          aria-label="Controles do slideshow"
+        >
+          <button class="slide-btn" id="slide-prev" aria-label="Slide anterior">
+            &#8249;
+          </button>
+          <div class="slide-dots" id="slide-dots">
+            <span
+              class="dot active"
+              data-index="0"
+              role="button"
+              aria-label="Slide 1"
+            ></span>
+            <span
+              class="dot"
+              data-index="1"
+              role="button"
+              aria-label="Slide 2"
+            ></span>
+            <span
+              class="dot"
+              data-index="2"
+              role="button"
+              aria-label="Slide 3"
+            ></span>
+            <span
+              class="dot"
+              data-index="3"
+              role="button"
+              aria-label="Slide 4"
+            ></span>
+          </div>
+          <button class="slide-btn" id="slide-next" aria-label="Próximo slide">
+            &#8250;
+          </button>
+        </div>
+      </section>
+
+      <!-- FEATURES -->
+      <section class="section" aria-labelledby="features-title">
+        <div class="section-inner">
+          <header class="section-header">
+            <span class="label">Funcionalidades</span>
+            <h2 id="features-title">
+              Tudo que você precisa para estudar com mais eficiência
+            </h2>
+            <p>Uma solução completa integrada à câmera do seu dispositivo.</p>
+          </header>
+
+          <div class="features-grid">
+            <article class="feature-card">
+              <div class="feature-icon" aria-hidden="true">🔬</div>
+              <h3>OCR em Tempo Real</h3>
+              <p>
+                Reconhecimento automático de texto impresso e manuscrito.
+                Funciona em lousa, livros, slides e documentos.
+              </p>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-icon" aria-hidden="true">🔍</div>
+              <h3>Pesquisa Instantânea</h3>
+              <p>
+                Sem copiar, sem trocar de app. Um toque e o Google já abriu com
+                o texto detectado.
+              </p>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-icon" aria-hidden="true">🌐</div>
+              <h3>Tradutor Integrado</h3>
+              <p>
+                Detectou um texto em outra língua? Traduza instantaneamente
+                direto pelo scanner.
+              </p>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-icon" aria-hidden="true">📋</div>
+              <h3>Copiar com 1 Toque</h3>
+              <p>
+                Copie qualquer trecho reconhecido para a área de transferência e
+                use onde quiser.
+              </p>
+            </article>
+
+            <article class="feature-card">
+              <div class="feature-icon" aria-hidden="true">🕓</div>
+              <h3>Histórico de Scans</h3>
+              <p>
+                Todos os textos detectados ficam salvos para você acessar
+                depois, sem precisar varrer novamente.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- HOW IT WORKS -->
+      <section
+        class="section steps"
+        id="como-funciona"
+        aria-labelledby="steps-title"
+      >
+        <div class="section-inner">
+          <header class="section-header">
+            <span class="label">Passo a passo</span>
+            <h2 id="steps-title">Simples assim</h2>
+            <p>
+              Em menos de 5 segundos você já está com a informação que
+              precisava.
+            </p>
+          </header>
+
+          <ol class="steps-list">
+            <li class="step-item">
+              <div class="step-number" aria-hidden="true">1</div>
+              <h3>Abra o Scanner</h3>
+              <p>Acesse a câmera OCR diretamente pelo app, sem configuração.</p>
+            </li>
+            <li class="step-item">
+              <div class="step-number" aria-hidden="true">2</div>
+              <h3>Envie uma imagem</h3>
+              <p>Selecione do dispositivo o texto que deseja capturar.</p>
+            </li>
+            <li class="step-item">
+              <div class="step-number" aria-hidden="true">3</div>
+              <h3>Texto detectado</h3>
+              <p>
+                O sistema destaca automaticamente o conteúdo identificado na
+                tela.
+              </p>
+            </li>
+            <li class="step-item">
+              <div class="step-number" aria-hidden="true">4</div>
+              <h3>Escolha a ação</h3>
+              <p>Pesquise no Google, copie, ou traduza com um único toque.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- USE CASES -->
+      <section class="section" aria-labelledby="usecases-title">
+        <div class="section-inner">
+          <header class="section-header">
+            <span class="label">Casos de uso</span>
+            <h2 id="usecases-title">Feito para a vida universitária</h2>
+            <p>
+              Desenvolvido pensando nos cenários que estudantes enfrentam todos
+              os dias.
+            </p>
+          </header>
+
+          <div class="use-cases-grid" role="list">
+            <div class="use-case-tag" role="listitem">
+              Anotações manuscritas
+            </div>
+            <div class="use-case-tag" role="listitem">Páginas de livros</div>
+            <div class="use-case-tag" role="listitem">Slides de aula</div>
+            <div class="use-case-tag" role="listitem">Lousa do professor</div>
+            <div class="use-case-tag" role="listitem">Documentos impressos</div>
+            <div class="use-case-tag" role="listitem">Artigos científicos</div>
+            <div class="use-case-tag" role="listitem">
+              Formulários e contratos
+            </div>
+            <div class="use-case-tag" role="listitem">
+              Textos em outros idiomas
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="section cta-section" aria-labelledby="cta-title">
+        <div class="section-inner">
+          <div class="cta-card">
+            <h2 id="cta-title">
+              Pronto para digitalizar textos com inteligência?
+            </h2>
+            <p>
+              Acesse o scanner OCR e detecte texto em qualquer imagem com
+              precisão.
+            </p>
+            <div class="cta-btns">
+              <a href="camera.html" class="btn btn-primary"
+                >Abrir Scanner OCR</a
+              >
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer>
+      <div class="footer-inner">
+        <div class="footer-top">
+          <div class="footer-brand">
+            <a href="index.html" class="nav-logo">
+              <span>Seek<em>Vision</em></span>
+            </a>
+            <p>
+              OCR inteligente integrado à câmera, pensado para estudantes
+              universitários.
+            </p>
+          </div>
+
+          <nav class="footer-nav" aria-label="Links do site">
+            <h4>Páginas</h4>
+            <ul>
+              <li><a href="index.html">Início</a></li>
+              <li><a href="camera.html">Scanner OCR</a></li>
+            </ul>
+          </nav>
+
+          <nav class="footer-nav" aria-label="Recursos">
+            <h4>Recursos</h4>
+            <ul>
+              <li><a href="#como-funciona">Como funciona</a></li>
+              <li><a href="#features-title">Funcionalidades</a></li>
+              <li><a href="#usecases-title">Casos de uso</a></li>
+            </ul>
+          </nav>
+        </div>
+
+        <div class="footer-bottom">
+          <span>© 2026 SeekVision — Challenge JOVI</span>
+          <span>Sprint 2 · WebDev &amp; Front-End</span>
+        </div>
+      </div>
+    </footer>
+
+    <!-- TOAST CONTAINER -->
+    <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+    <script src="js/main.js"></script>
+    <script src="js/slideshow.js"></script>
+  </body>
+</html>
