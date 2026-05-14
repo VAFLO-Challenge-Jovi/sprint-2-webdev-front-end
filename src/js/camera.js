@@ -32,7 +32,7 @@
   // ── State ─────────────────────────────────────────────
   let detectedText   = '';
   const HISTORY_KEY  = 'seekvision_history';
-  const DEFAULT_IMAGE = '../images/default-photo.jpg';
+  const DEFAULT_IMAGE = '../assets/imgs/default-photo.jpg';
   const DEFAULT_TEXT  = 'The Photography Storytelling Workshop';
 
   // ── Status helpers ────────────────────────────────────
