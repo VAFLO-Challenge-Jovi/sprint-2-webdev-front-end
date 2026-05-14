@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SeekVision — Entrar</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="auth-page">
+
+    <!-- Visual / Brand panel -->
+    <div class="auth-visual">
+      <div class="auth-visual-content">
+        <div class="auth-logo">Seek<em>Vision</em></div>
+        <p>OCR inteligente para estudantes universitários.</p>
+
+        <ul class="auth-feature-list">
+          <li class="auth-feature-item">
+            <span class="auth-feature-icon">🔬</span>
+            <p>Detecção automática de texto em imagens</p>
+          </li>
+          <li class="auth-feature-item">
+            <span class="auth-feature-icon">🔍</span>
+            <p>Pesquisa instantânea no Google</p>
+          </li>
+          <li class="auth-feature-item">
+            <span class="auth-feature-icon">📋</span>
+            <p>Copie e traduza com um único toque</p>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Form panel -->
+    <div class="auth-panel">
+
+      <!-- Tab switcher -->
+      <div class="auth-tabs" role="tablist" aria-label="Modo de acesso">
+        <button class="auth-tab active" id="tab-login"
+          role="tab" aria-selected="true" aria-controls="form-login">
+          Entrar
+        </button>
+        <button class="auth-tab" id="tab-register"
+          role="tab" aria-selected="false" aria-controls="form-register">
+          Criar conta
+        </button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <form class="form" id="form-login" novalidate aria-label="Formulário de login">
+
+        <div class="auth-header">
+          <h2>Bem-vindo de volta</h2>
+          <p>Entre com seu e-mail e senha para continuar.</p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="login-email">E-mail</label>
+          <input
+            class="form-input"
+            type="email"
+            id="login-email"
+            placeholder="seu@email.com"
+            autocomplete="email"
+          >
+          <span class="form-error" id="login-email-error" role="alert">
+            Insira um e-mail válido.
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="login-password">Senha</label>
+          <div class="form-input-wrap">
+            <input
+              class="form-input"
+              type="password"
+              id="login-password"
+              placeholder="Sua senha"
+              autocomplete="current-password"
+            >
+            <button type="button" class="input-icon" id="toggle-login-pw" aria-label="Mostrar senha">
+              👁
+            </button>
+          </div>
+          <span class="form-error" id="login-password-error" role="alert">
+            A senha deve ter pelo menos 6 caracteres.
+          </span>
+        </div>
+
+        <div class="form-row">
+          <label class="form-check">
+            <input type="checkbox" id="login-remember">
+            Lembrar de mim
+          </label>
+          <a href="#" class="form-link">Esqueci a senha</a>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-full">Entrar</button>
+
+        <div class="form-divider">ou</div>
+
+        <p style="text-align:center;font-size:0.88rem;color:var(--text-secondary)">
+          Não tem conta?
+          <button type="button" class="form-link" id="goto-register"
+            style="background:none;border:none;cursor:pointer;font-size:inherit;padding:0">
+            Criar conta grátis
+          </button>
+        </p>
+
+      </form>
+
+      <!-- REGISTER FORM (hidden by default) -->
+      <form class="form hidden" id="form-register" novalidate aria-label="Formulário de cadastro">
+
+        <div class="auth-header">
+          <h2>Crie sua conta</h2>
+          <p>Preencha os dados abaixo para começar.</p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-name">Nome completo</label>
+          <input
+            class="form-input"
+            type="text"
+            id="reg-name"
+            placeholder="Seu nome completo"
+            autocomplete="name"
+          >
+          <span class="form-error" id="reg-name-error" role="alert">
+            Por favor, insira seu nome.
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-email">E-mail</label>
+          <input
+            class="form-input"
+            type="email"
+            id="reg-email"
+            placeholder="seu@email.com"
+            autocomplete="email"
+          >
+          <span class="form-error" id="reg-email-error" role="alert">
+            Insira um e-mail válido.
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-password">Senha</label>
+          <div class="form-input-wrap">
+            <input
+              class="form-input"
+              type="password"
+              id="reg-password"
+              placeholder="Crie uma senha"
+              autocomplete="new-password"
+            >
+            <button type="button" class="input-icon" id="toggle-reg-pw" aria-label="Mostrar senha">
+              👁
+            </button>
+          </div>
+          <div class="password-strength" id="pw-strength" aria-hidden="true">
+            <div class="strength-bar" id="bar-1"></div>
+            <div class="strength-bar" id="bar-2"></div>
+            <div class="strength-bar" id="bar-3"></div>
+          </div>
+          <span class="strength-label" id="strength-label"></span>
+          <span class="form-error" id="reg-password-error" role="alert">
+            A senha deve ter pelo menos 6 caracteres.
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="reg-confirm">Confirmar senha</label>
+          <input
+            class="form-input"
+            type="password"
+            id="reg-confirm"
+            placeholder="Repita a senha"
+            autocomplete="new-password"
+          >
+          <span class="form-error" id="reg-confirm-error" role="alert">
+            As senhas não coincidem.
+          </span>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-full">Criar conta</button>
+
+        <p style="text-align:center;font-size:0.88rem;color:var(--text-secondary)">
+          Já tem conta?
+          <button type="button" class="form-link" id="goto-login"
+            style="background:none;border:none;cursor:pointer;font-size:inherit;padding:0">
+            Entrar
+          </button>
+        </p>
+
+      </form>
+
+    </div>
+  </div>
+
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <script src="js/main.js"></script>
+  <script src="js/login.js"></script>
+</body>
+</html>
