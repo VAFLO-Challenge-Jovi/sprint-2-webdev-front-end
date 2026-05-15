@@ -43,6 +43,7 @@ O arquivo `index.html` permanece na raiz do projeto como página inicial da apli
 
 ### Estrutura de arquivos
 
+```
 /
 ├── index.html                     # Página inicial da aplicação
 ├── INTEGRANTES.TXT                # Arquivo com os nomes e RMs dos integrantes
@@ -69,7 +70,7 @@ O arquivo `index.html` permanece na raiz do projeto como página inicial da apli
     └── pages/
         ├── camera.html            # Página principal do scanner OCR
         └── login.html             # Página de login e cadastro
-
+```
 
 ## Requisitos cumpridos
 
