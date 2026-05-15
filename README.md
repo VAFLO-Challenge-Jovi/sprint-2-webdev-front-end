@@ -35,6 +35,12 @@ Projeto acadêmico desenvolvido para as disciplinas **Web Development** e **Fron
 - `localStorage` para persistência de histórico e sessão
 - Design system com tema claro (light theme)
 
+### Organização do projeto
+
+O projeto foi organizado dentro da pasta `src`, separando os arquivos por responsabilidade.  
+As imagens ficam em `assets/imgs`, os estilos em `css`, os scripts JavaScript em `js` e as páginas secundárias em `pages`.  
+O arquivo `index.html` permanece na raiz do projeto como página inicial da aplicação.
+
 ### Estrutura de arquivos
 
 /
