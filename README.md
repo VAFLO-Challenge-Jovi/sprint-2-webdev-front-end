@@ -37,23 +37,33 @@ Projeto acadêmico desenvolvido para as disciplinas **Web Development** e **Fron
 
 ### Estrutura de arquivos
 
-```
 /
-├── index.html        # Landing page com slideshow e funcionalidades
-├── camera.html       # Scanner OCR (funcionalidade principal)
-├── login.html        # Login e cadastro com validação de formulário
-├── css/
-│   └── style.css     # Design system completo (Flexbox, tema claro)
-├── js/
-│   ├── main.js       # Utilitários compartilhados: navbar, toasts, modais
-│   ├── slideshow.js  # Carrossel automático com suporte a touch e teclado
-│   ├── camera.js     # OCR simulado, upload de imagem e histórico
-│   └── login.js      # Validação de formulários e autenticação via localStorage
-├── images/
-│   └── default-photo.jpg  # Imagem padrão do scanner
-├── INTEGRANTES.TXT
-└── README.md
-```
+├── index.html                     # Página inicial da aplicação
+├── INTEGRANTES.TXT                # Arquivo com os nomes e RMs dos integrantes
+├── README.md                      # Documentação do projeto
+├── .gitignore                     # Arquivos e pastas ignorados pelo Git
+│
+└── src/
+    ├── assets/
+    │   └── imgs/
+    │       ├── buscando-texto.jpg              # Imagem utilizada durante a simulação de busca/OCR
+    │       ├── default-photo-text-found.jpg    # Imagem padrão com texto encontrado
+    │       ├── default-photo.jpg               # Imagem padrão exibida no scanner
+    │       └── resultado-encontrado.jpg        # Imagem utilizada para representar resultado encontrado
+    │
+    ├── css/
+    │   └── style.css              # Estilos globais da aplicação, responsividade e design system
+    │
+    ├── js/
+    │   ├── camera.js              # Lógica da câmera, upload de imagem, OCR simulado e histórico
+    │   ├── login.js               # Validação de login, cadastro e sessão via localStorage
+    │   ├── main.js                # Funções gerais compartilhadas entre páginas
+    │   └── slideshow.js           # Controle do slideshow/carrossel da página inicial
+    │
+    └── pages/
+        ├── camera.html            # Página principal do scanner OCR
+        └── login.html             # Página de login e cadastro
+
 
 ## Requisitos cumpridos
 
