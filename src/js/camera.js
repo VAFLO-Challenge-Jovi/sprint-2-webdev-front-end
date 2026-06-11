@@ -12,7 +12,6 @@
   const placeholder    = document.getElementById('camera-placeholder');
   const scanLine       = document.getElementById('scan-line');
 
-  const btnReset       = document.getElementById('btn-reset');
   const uploadInput    = document.getElementById('upload-input');
   const startArea      = document.getElementById('camera-start-area');
 
@@ -24,13 +23,28 @@
   const btnCopyText     = document.getElementById('btn-copy-text');
   const btnTranslate    = document.getElementById('btn-translate');
   const btnSaveNote     = document.getElementById('btn-save-note');
+  const btnAnalyzeAI    = document.getElementById('btn-analyze-ai');
 
   const historyList    = document.getElementById('history-list');
   const historyEmpty   = document.getElementById('history-empty');
   const btnClearHist   = document.getElementById('btn-clear-history');
 
+  const aiChatPanel     = document.getElementById('ai-chat-panel');
+  const aiChatMessages  = document.getElementById('ai-chat-messages');
+  const aiFinalResponse = document.getElementById('ai-final-response');
+  const btnCloseAIChat  = document.getElementById('btn-close-ai-chat');
+  const btnSaveAIHistory = document.getElementById('btn-save-ai-history');
+  const aiDrawerBackdrop = document.getElementById('ai-drawer-backdrop');
+  const aiDrawerDot = document.getElementById('ai-drawer-dot');
+  const aiDrawerStatusText = document.getElementById('ai-drawer-status-text');
+
   // ── State ─────────────────────────────────────────────
   let detectedText   = '';
+  let currentImageSrc = '';
+  let currentAnalysis = null;
+  let analysisRunning = false;
+  let ocrRunning = false;
+  let analysisRunId = 0;
   const HISTORY_KEY  = 'seekvision_history';
   const DEFAULT_IMAGE = '../assets/imgs/default-photo.jpg';
   const DEFAULT_TEXT  = 'The Photography Storytelling Workshop';
@@ -48,24 +62,44 @@
     });
   }
 
+  function setAnalyzeEnabled(enabled, label, loading = false) {
+    if (!btnAnalyzeAI) return;
+    btnAnalyzeAI.disabled = !enabled;
+    btnAnalyzeAI.classList.toggle('loading', loading);
+    btnAnalyzeAI.setAttribute('aria-busy', loading ? 'true' : 'false');
+    const text = label || (analysisRunning ? 'Analisando...' : 'Analisar com IA');
+    const span = btnAnalyzeAI.querySelector('span');
+    if (span) span.textContent = text;
+    else btnAnalyzeAI.textContent = text;
+  }
+
+  function setAIStatus(state, text) {
+    if (aiDrawerDot) aiDrawerDot.className = 'status-dot ' + state;
+    if (aiDrawerStatusText) aiDrawerStatusText.textContent = text;
+  }
+
   // ── Display image and trigger OCR ────────────────────
   function displayImage(src) {
+    currentImageSrc = src;
     capturedImg.src = src;
     capturedWrap.classList.add('show');
     placeholder.style.display = 'none';
-    if (startArea) startArea.style.display = 'none';
-    if (btnReset) btnReset.classList.remove('hidden');
+    if (startArea) startArea.style.display = 'flex';
+    resetAIChat();
     runOCRSimulation();
   }
 
   // ── OCR Simulation ────────────────────────────────────
   function runOCRSimulation() {
+    ocrRunning = true;
     setStatus('scanning', 'Analisando texto...');
     ocrOutput.textContent = '';
     ocrOutput.className   = 'ocr-text-display scanning';
     scanLine.classList.add('active');
     setActionsEnabled(false);
+    setAnalyzeEnabled(false, 'Aguardando OCR...', true);
     detectionBox.classList.remove('show');
+    if (btnSaveNote) btnSaveNote.querySelector('span').textContent = 'Salvar no histórico';
 
     const scanDuration = 1600 + Math.random() * 800;
 
@@ -75,8 +109,10 @@
 
       typewriterEffect(ocrOutput, DEFAULT_TEXT, 22, () => {
         detectedText = DEFAULT_TEXT;
+        ocrRunning = false;
         setStatus('done', 'Texto detectado');
         setActionsEnabled(true);
+        setAnalyzeEnabled(true);
         showDetectionBox();
         showToast('Texto detectado com sucesso!', 'success');
       });
@@ -104,21 +140,6 @@
     detectionBox.style.width  = '60%';
     detectionBox.style.height = '45%';
     detectionBox.classList.add('show');
-  }
-
-  // ── Reset to upload state ─────────────────────────────
-  function resetScanner() {
-    capturedWrap.classList.remove('show');
-    detectionBox.classList.remove('show');
-    placeholder.style.display = 'flex';
-    ocrOutput.textContent = '';
-    ocrOutput.className = 'ocr-text-display empty';
-    detectedText = '';
-    setActionsEnabled(false);
-    setStatus('ready', 'Aguardando captura...');
-    if (btnReset) btnReset.classList.add('hidden');
-    if (startArea) startArea.style.display = 'flex';
-    if (uploadInput) uploadInput.value = '';
   }
 
   // ── Action: Search Google ─────────────────────────────
@@ -235,6 +256,174 @@
     });
   }
 
+  // ── Mock AI chat flow ─────────────────────────────────
+  function resetAIChat() {
+    analysisRunId++;
+    currentAnalysis = null;
+    analysisRunning = false;
+    ocrRunning = false;
+    if (aiChatMessages) aiChatMessages.innerHTML = '';
+    if (aiFinalResponse) {
+      aiFinalResponse.innerHTML = '';
+      aiFinalResponse.classList.add('hidden');
+    }
+    if (btnSaveAIHistory) {
+      btnSaveAIHistory.classList.add('hidden');
+      btnSaveAIHistory.disabled = false;
+      btnSaveAIHistory.textContent = 'Salvar no histórico';
+    }
+    setAIStatus('ready', 'Pronto para analisar a imagem.');
+    closeAIChat();
+  }
+
+  function openAIChat() {
+    if (aiChatPanel) aiChatPanel.classList.remove('hidden');
+    if (aiDrawerBackdrop) aiDrawerBackdrop.classList.remove('hidden');
+  }
+
+  function closeAIChat() {
+    if (aiChatPanel) aiChatPanel.classList.add('hidden');
+    if (aiDrawerBackdrop) aiDrawerBackdrop.classList.add('hidden');
+  }
+
+  function isAIChatOpen() {
+    return aiChatPanel && !aiChatPanel.classList.contains('hidden');
+  }
+
+  function addAIMessage(text, state = 'loading') {
+    if (!aiChatMessages) return null;
+
+    const message = document.createElement('div');
+    message.className = 'ai-chat-message ' + state;
+    message.textContent = text;
+    aiChatMessages.appendChild(message);
+    aiChatMessages.scrollTop = aiChatMessages.scrollHeight;
+    return message;
+  }
+
+  async function runAIStage(message, task) {
+    const bubble = addAIMessage(message, 'loading');
+    setAIStatus('scanning', message);
+    const result = await task();
+    if (bubble) {
+      bubble.classList.remove('loading');
+      bubble.classList.add('done');
+    }
+    return result;
+  }
+
+  function waitMock(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  async function runMockAIAnalysis() {
+    if (analysisRunning || ocrRunning || !currentImageSrc) return;
+
+    if (currentAnalysis && !isAIChatOpen()) {
+      openAIChat();
+      return;
+    }
+
+    const mockAI = window.MockKnowledgeAI;
+    if (!mockAI) {
+      showToast('Serviço de IA não encontrado.', 'error');
+      return;
+    }
+
+    analysisRunning = true;
+    const runId = ++analysisRunId;
+    currentAnalysis = null;
+    openAIChat();
+    if (aiChatMessages) aiChatMessages.innerHTML = '';
+    if (aiFinalResponse) {
+      aiFinalResponse.innerHTML = '';
+      aiFinalResponse.classList.add('hidden');
+    }
+    if (btnSaveAIHistory) btnSaveAIHistory.classList.add('hidden');
+    setAnalyzeEnabled(false, 'Analisando...', true);
+
+    try {
+      const imageAnalysis = await runAIStage('Analisando imagem...', () => mockAI.analyzeImageMock(currentImageSrc));
+      if (runId !== analysisRunId) return;
+      const extractedText = await runAIStage('Extraindo texto...', () => mockAI.extractTextMock(currentImageSrc));
+      if (runId !== analysisRunId) return;
+      const query = extractedText.text || detectedText || imageAnalysis.suggestedTitle || 'imagem analisada';
+      const searchResults = await runAIStage('Pesquisando no Google...', () => mockAI.searchWebMock(query));
+      if (runId !== analysisRunId) return;
+      await runAIStage('Lendo resultados encontrados...', () => waitMock(850));
+      if (runId !== analysisRunId) return;
+      const note = await runAIStage('Gerando resumo com IA...', () => mockAI.generateNoteMock({
+        image: currentImageSrc,
+        extractedText,
+        searchResults,
+      }));
+      if (runId !== analysisRunId) return;
+
+      currentAnalysis = note;
+      renderFinalAnalysis(note);
+      if (btnSaveAIHistory) btnSaveAIHistory.classList.remove('hidden');
+      setAIStatus('done', 'Análise concluída. Revise o resumo gerado.');
+      showToast('Análise com IA concluída.', 'success');
+    } catch {
+      if (runId !== analysisRunId) return;
+      setAIStatus('done', 'Não foi possível concluir a análise simulada.');
+      addAIMessage('Não foi possível concluir a análise simulada.', 'done');
+      showToast('Erro ao executar a análise com IA.', 'error');
+    } finally {
+      if (runId !== analysisRunId) return;
+      analysisRunning = false;
+      setAnalyzeEnabled(!!currentImageSrc);
+    }
+  }
+
+  function renderFinalAnalysis(note) {
+    if (!aiFinalResponse) return;
+
+    aiFinalResponse.innerHTML = renderAnalysisMarkup(note);
+    aiFinalResponse.classList.remove('hidden');
+  }
+
+  function renderAnalysisMarkup(note, options = {}) {
+    const summary = options.shortSummary ? truncate(note.summary, 120) : note.summary;
+    const points = (note.keyPoints || [])
+      .map(point => `<li>${escapeHtml(point)}</li>`)
+      .join('');
+    const sources = (note.sources || [])
+      .map(source => `
+        <a href="${escapeHtml(source.url)}" target="_blank" rel="noopener noreferrer">
+          ${escapeHtml(source.title)}
+        </a>
+      `)
+      .join('');
+
+    return `
+      <h5>${escapeHtml(note.title)}</h5>
+      <div class="ai-note-meta">
+        <span class="ai-note-pill">${escapeHtml(note.category)}</span>
+        <span class="ai-note-pill">${formatDate(note.createdAt)}</span>
+      </div>
+      <p>${escapeHtml(summary)}</p>
+      <ul class="ai-note-list">${points}</ul>
+      <div class="ai-source-list">${sources}</div>
+    `;
+  }
+
+  function saveCurrentAnalysis() {
+    if (!currentAnalysis || !window.MockKnowledgeAI) return;
+
+    currentAnalysis = window.MockKnowledgeAI.saveHistoryMock(currentAnalysis);
+    if (btnSaveAIHistory) {
+      btnSaveAIHistory.disabled = true;
+      btnSaveAIHistory.textContent = 'Salvo no histórico';
+    }
+    showToast('Análise salva no histórico.', 'success');
+  }
+
+  if (btnAnalyzeAI) btnAnalyzeAI.addEventListener('click', runMockAIAnalysis);
+  if (btnCloseAIChat) btnCloseAIChat.addEventListener('click', closeAIChat);
+  if (aiDrawerBackdrop) aiDrawerBackdrop.addEventListener('click', closeAIChat);
+  if (btnSaveAIHistory) btnSaveAIHistory.addEventListener('click', saveCurrentAnalysis);
+
   // ── Clear history ─────────────────────────────────────
   btnClearHist.addEventListener('click', () => { openModal('confirm-modal'); });
 
@@ -288,8 +477,6 @@
       if (file) handleFileUpload(file);
     });
   }
-
-  if (btnReset) btnReset.addEventListener('click', resetScanner);
 
   // ── Init — load default image on page start ───────────
   renderHistory();

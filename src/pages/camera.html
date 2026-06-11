@@ -19,6 +19,7 @@
         <ul class="nav-links" id="nav-links">
           <li><a href="../../index.html">Início</a></li>
           <li><a href="camera.html" class="active">Scanner</a></li>
+          <li><a href="history.html">Histórico</a></li>
           <li><a href="login.html" class="btn btn-primary">Entrar</a></li>
         </ul>
 
@@ -31,6 +32,7 @@
     <nav class="mobile-menu" id="mobile-menu">
       <a href="../../index.html">Início</a>
       <a href="camera.html" class="active">Scanner OCR</a>
+      <a href="history.html">Histórico</a>
     </nav>
   </header>
 
@@ -75,16 +77,12 @@
         </div>
 
         <!-- UPLOAD / RESET CONTROLS -->
-        <div class="camera-action-group" id="camera-start-area" style="display:none">
+        <div class="camera-action-group" id="camera-start-area">
           <label class="btn btn-primary" style="flex:1;cursor:pointer" for="upload-input">
             Enviar imagem
           </label>
           <input type="file" id="upload-input" accept="image/*" class="hidden" aria-label="Selecionar imagem do dispositivo">
         </div>
-
-        <button class="btn btn-secondary hidden" id="btn-reset" style="width:100%">
-          Nova captura
-        </button>
 
       </section>
 
@@ -108,6 +106,9 @@
           ></div>
 
           <div class="ocr-actions" aria-label="Ações disponíveis">
+            <button class="ocr-action-btn" id="btn-analyze-ai" disabled aria-label="Analisar imagem com IA">
+              <span>Analisar com IA</span>
+            </button>
             <button class="ocr-action-btn" id="btn-search-google" disabled aria-label="Pesquisar texto no Google">
               <span>Pesquisar no Google</span>
             </button>
@@ -154,6 +155,38 @@
     </div>
   </main>
 
+  <!-- MOCK AI CHAT DRAWER -->
+  <div class="ai-drawer-backdrop hidden" id="ai-drawer-backdrop" aria-hidden="true"></div>
+  <aside class="ai-chat-panel ai-chat-drawer hidden" id="ai-chat-panel" aria-labelledby="ai-chat-title">
+    <div class="ai-chat-header">
+      <div>
+        <span class="ai-chat-label">IA</span>
+        <h4 id="ai-chat-title">Análise inteligente</h4>
+      </div>
+      <button class="btn btn-ghost ai-chat-close" id="btn-close-ai-chat" aria-label="Fechar análise">
+        Fechar
+      </button>
+    </div>
+
+    <div class="ai-drawer-status">
+      <span class="status-dot ready" id="ai-drawer-dot" aria-hidden="true"></span>
+      <p id="ai-drawer-status-text">Pronto para analisar a imagem.</p>
+    </div>
+
+    <div class="ai-chat-messages" id="ai-chat-messages" aria-live="polite"></div>
+
+    <div class="ai-note-card hidden" id="ai-final-response"></div>
+
+    <div class="ai-drawer-actions">
+      <button class="btn btn-primary hidden" id="btn-save-ai-history" style="width:100%">
+        Salvar no histórico
+      </button>
+      <a class="btn btn-secondary ai-history-link" href="history.html">
+        Abrir histórico
+      </a>
+    </div>
+  </aside>
+
   <!-- CONFIRM CLEAR MODAL -->
   <div class="modal-overlay" id="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
     <div class="modal">
@@ -170,6 +203,7 @@
   <div class="toast-container" id="toast-container" aria-live="polite"></div>
 
   <script src="../js/main.js"></script>
+  <script src="../services/mockKnowledgeAI.js"></script>
   <script src="../js/camera.js"></script>
 </body>
 </html>

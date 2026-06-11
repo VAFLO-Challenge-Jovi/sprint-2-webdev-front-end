@@ -24,6 +24,8 @@ Projeto acadêmico desenvolvido para as disciplinas **Web Development** e **Fron
 - **Copiar texto** — copia o conteúdo reconhecido para a área de transferência
 - **Traduzir** — abre o Google Tradutor com o texto detectado
 - **Histórico de scans** — persiste os textos detectados no `localStorage` com opção de restaurar ou limpar
+- **Análise com IA mock** — simula OCR, pesquisa, leitura de resultados e resumo sem APIs externas
+- **Histórico inteligente** — página separada com temas, subabas e detalhes mock organizados
 - **Slideshow** — carrossel automático com 4 slides, navegação manual, suporte a swipe e teclado
 - **Login e cadastro** — formulários com validação completa no cliente (e-mail, senha, força de senha, confirmação)
 
@@ -63,13 +65,18 @@ O arquivo `index.html` permanece na raiz do projeto como página inicial da apli
     │
     ├── js/
     │   ├── camera.js              # Lógica da câmera, upload de imagem, OCR simulado e histórico
+    │   ├── history.js             # Navegação da tela de histórico inteligente mock
     │   ├── login.js               # Validação de login, cadastro e sessão via localStorage
     │   ├── main.js                # Funções gerais compartilhadas entre páginas
     │   └── slideshow.js           # Controle do slideshow/carrossel da página inicial
     │
-    └── pages/
-        ├── camera.html            # Página principal do scanner OCR
-        └── login.html             # Página de login e cadastro
+    ├── pages/
+    │   ├── camera.html            # Página principal do scanner OCR
+    │   ├── history.html           # Página de histórico inteligente mock
+    │   └── login.html             # Página de login e cadastro
+    │
+    └── services/
+        └── mockKnowledgeAI.js      # Service mock para análise por imagem e histórico inteligente
 ```
 
 ## Requisitos cumpridos
