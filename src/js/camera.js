@@ -47,7 +47,6 @@
   let analysisRunId = 0;
   const HISTORY_KEY  = 'seekvision_history';
   const DEFAULT_IMAGE = '../assets/imgs/default-photo.jpg';
-  const DEFAULT_TEXT  = 'The Photography Storytelling Workshop';
 
   // ── Status helpers ────────────────────────────────────
   function setStatus(state, text) {
@@ -86,11 +85,35 @@
     placeholder.style.display = 'none';
     if (startArea) startArea.style.display = 'flex';
     resetAIChat();
-    runOCRSimulation();
+    runOCR(src);
   }
 
-  // ── OCR Simulation ────────────────────────────────────
-  function runOCRSimulation() {
+  // ── Tesseract worker (lazy, reused across images) ─────
+  let ocrWorker = null;
+  let ocrRunToken = 0;
+
+  async function getOCRWorker() {
+    if (ocrWorker) return ocrWorker;
+    if (typeof Tesseract === 'undefined') {
+      throw new Error('Tesseract.js não foi carregado.');
+    }
+    // 'por+eng' lets it read both Portuguese and English text.
+    ocrWorker = await Tesseract.createWorker('por+eng', 1, {
+      logger: m => {
+        if (m.status === 'recognizing text') {
+          const pct = Math.round((m.progress || 0) * 100);
+          setStatus('scanning', `Reconhecendo texto... ${pct}%`);
+        } else if (m.status === 'loading language traineddata') {
+          setStatus('scanning', 'Carregando modelo de OCR...');
+        }
+      },
+    });
+    return ocrWorker;
+  }
+
+  // ── Real OCR with Tesseract.js ────────────────────────
+  async function runOCR(src) {
+    const token = ++ocrRunToken;        // guards against stale results
     ocrRunning = true;
     setStatus('scanning', 'Analisando texto...');
     ocrOutput.textContent = '';
@@ -101,22 +124,48 @@
     detectionBox.classList.remove('show');
     if (btnSaveNote) btnSaveNote.querySelector('span').textContent = 'Salvar no histórico';
 
-    const scanDuration = 1600 + Math.random() * 800;
+    try {
+      const worker = await getOCRWorker();
+      const { data } = await worker.recognize(src);
 
-    setTimeout(() => {
+      // A newer image was loaded while this one was scanning — drop it.
+      if (token !== ocrRunToken) return;
+
+      const text = (data.text || '').trim();
       scanLine.classList.remove('active');
       ocrOutput.className = 'ocr-text-display';
 
-      typewriterEffect(ocrOutput, DEFAULT_TEXT, 22, () => {
-        detectedText = DEFAULT_TEXT;
+      if (!text) {
+        ocrOutput.textContent = '';
+        detectedText = '';
+        ocrRunning = false;
+        setStatus('error', 'Nenhum texto detectado');
+        setActionsEnabled(false);
+        setAnalyzeEnabled(!!currentImageSrc);
+        showToast('Nenhum texto foi detectado na imagem.', 'error');
+        return;
+      }
+
+      typewriterEffect(ocrOutput, text, 12, () => {
+        if (token !== ocrRunToken) return;
+        detectedText = text;
         ocrRunning = false;
         setStatus('done', 'Texto detectado');
         setActionsEnabled(true);
         setAnalyzeEnabled(true);
-        showDetectionBox();
+        showDetectionBox(data.words);
         showToast('Texto detectado com sucesso!', 'success');
       });
-    }, scanDuration);
+    } catch (err) {
+      if (token !== ocrRunToken) return;
+      scanLine.classList.remove('active');
+      ocrOutput.className = 'ocr-text-display';
+      ocrRunning = false;
+      setStatus('error', 'Falha no OCR');
+      setActionsEnabled(false);
+      setAnalyzeEnabled(!!currentImageSrc);
+      showToast('Erro ao processar a imagem: ' + err.message, 'error');
+    }
   }
 
   // ── Typewriter effect ─────────────────────────────────
@@ -134,7 +183,33 @@
   }
 
   // ── Show detection box overlay ────────────────────────
-  function showDetectionBox() {
+  // Draws a box around the union of all recognized words (in % of the
+  // image), falling back to a centered box if word coords aren't available.
+  function showDetectionBox(words) {
+    const w = capturedImg.naturalWidth;
+    const h = capturedImg.naturalHeight;
+
+    if (words && words.length && w && h) {
+      let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+      words.forEach(word => {
+        const b = word.bbox;
+        if (!b) return;
+        x0 = Math.min(x0, b.x0);
+        y0 = Math.min(y0, b.y0);
+        x1 = Math.max(x1, b.x1);
+        y1 = Math.max(y1, b.y1);
+      });
+
+      if (Number.isFinite(x0)) {
+        detectionBox.style.left   = (x0 / w * 100) + '%';
+        detectionBox.style.top    = (y0 / h * 100) + '%';
+        detectionBox.style.width  = ((x1 - x0) / w * 100) + '%';
+        detectionBox.style.height = ((y1 - y0) / h * 100) + '%';
+        detectionBox.classList.add('show');
+        return;
+      }
+    }
+
     detectionBox.style.top    = '15%';
     detectionBox.style.left   = '20%';
     detectionBox.style.width  = '60%';
