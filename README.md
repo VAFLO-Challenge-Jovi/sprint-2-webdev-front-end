@@ -1,6 +1,13 @@
-# SeekVision — OCR Inteligente para Estudantes
+# SeekVision — OCR Inteligente para Estudantes (React)
 
-Projeto acadêmico desenvolvido para as disciplinas **Web Development** e **Front-End Design** — Sprint 2 | FIAP 2026.
+Projeto acadêmico desenvolvido para as disciplinas **Web Development** e **Front-End Design** —
+Sprint 3 | FIAP 2026.
+
+Esta é a migração para **React + Vite** do protótipo entregue na Sprint 2
+(`sprint-2-webdev-front-end/`, HTML/CSS/JS puro). A proposta, o visual e as funcionalidades são os
+mesmos — o que muda é a tecnologia: a interface inteira agora é construída com componentes
+funcionais React, seguindo a estrutura pai → filho (Header/Footer compartilhados, páginas como
+`Home`, `Camera`, `History`, `Login`, cada uma composta por componentes menores).
 
 ## Integrantes
 
@@ -14,7 +21,10 @@ Projeto acadêmico desenvolvido para as disciplinas **Web Development** e **Fron
 
 ## Sobre o projeto
 
-**SeekVision** é uma aplicação web que simula a integração entre câmera e ferramentas de pesquisa, utilizando OCR (Reconhecimento Óptico de Caracteres) para identificar textos em imagens. O objetivo é reduzir as etapas no processo de pesquisa de informações para estudantes universitários, transformando a câmera em uma ferramenta ativa de aprendizado.
+**SeekVision** é uma aplicação web que simula a integração entre câmera e ferramentas de pesquisa,
+utilizando OCR (Reconhecimento Óptico de Caracteres) para identificar textos em imagens. O
+objetivo é reduzir as etapas no processo de pesquisa de informações para estudantes
+universitários, transformando a câmera em uma ferramenta ativa de aprendizado.
 
 ### Funcionalidades
 
@@ -23,79 +33,119 @@ Projeto acadêmico desenvolvido para as disciplinas **Web Development** e **Fron
 - **Pesquisar no Google** — abre a pesquisa com o texto detectado em um clique
 - **Copiar texto** — copia o conteúdo reconhecido para a área de transferência
 - **Traduzir** — abre o Google Tradutor com o texto detectado
-- **Histórico de scans** — persiste os textos detectados no `localStorage` com opção de restaurar ou limpar
+- **Histórico de scans** — persiste os textos detectados no `localStorage` (via hook próprio) com opção de restaurar ou limpar
 - **Análise com IA mock** — simula OCR, pesquisa, leitura de resultados e resumo sem APIs externas
-- **Histórico inteligente** — página separada com temas, subabas e detalhes mock organizados
+- **Histórico inteligente** — página separada com temas, subabas, detalhes e conversa mock com IA
 - **Slideshow** — carrossel automático com 4 slides, navegação manual, suporte a swipe e teclado
 - **Login e cadastro** — formulários com validação completa no cliente (e-mail, senha, força de senha, confirmação)
 
-### Tecnologias
+## Tecnologias utilizadas
 
-- HTML5 semântico
-- CSS3 com Flexbox (sem frameworks)
-- JavaScript puro (sem bibliotecas externas)
-- `localStorage` para persistência de histórico e sessão
-- Design system com tema claro (light theme)
+- **React 19** (componentes funcionais, hooks)
+- **Vite** (build tool e dev server)
+- **React Router DOM** (rotas: `/`, `/camera`, `/history`, `/login`)
+- CSS puro (arquivo único global, portado do design system da Sprint 2 — sem frameworks CSS)
+- `localStorage` para persistência de sessão e histórico
+- Sem backend — toda a "IA" é simulada em `src/services/mockKnowledgeAI.js`
 
-### Organização do projeto
+## Como instalar as dependências
 
-O projeto foi organizado dentro da pasta `src`, separando os arquivos por responsabilidade.  
-As imagens ficam em `assets/imgs`, os estilos em `css`, os scripts JavaScript em `js` e as páginas secundárias em `pages`.  
-O arquivo `index.html` permanece na raiz do projeto como página inicial da aplicação.
+```bash
+npm install
+```
 
-### Estrutura de arquivos
+## Como executar o projeto
+
+```bash
+npm run dev
+```
+
+O terminal mostrará a URL local (por padrão `http://localhost:5173`). Abra no navegador.
+
+Para gerar a build de produção:
+
+```bash
+npm run build
+npm run preview   # opcional, serve a build gerada localmente
+```
+
+## Usuários e senha para teste
+
+Não há usuário fixo/seed. O login é 100% client-side: a tela `/login` permite **criar uma conta**
+(aba "Criar conta") com qualquer nome, e-mail e senha (mínimo 6 caracteres) — os dados ficam
+salvos apenas no `localStorage` do próprio navegador. Depois disso, use esse mesmo e-mail/senha na
+aba "Entrar" para testar o fluxo de login. Não há verificação de senha contra um backend: qualquer
+combinação de e-mail válido + senha com 6+ caracteres é aceita no login.
+
+## Onde e como a IA foi utilizada no projeto
+
+A migração deste projeto de HTML/CSS/JS puro (Sprint 2) para React (Sprint 3) foi feita com o
+auxílio do **Claude Code**: a IA leu o protótipo original da Sprint 2 e os requisitos da Sprint 3
+(documento do Challenge), e a partir disso gerou a estrutura inicial de componentes, hooks
+(`useLocalStorage`, `useToast`) e rotas React que reproduzem fielmente as telas e o comportamento
+já existentes. A equipe revisou o resultado gerado.
+
+Importante: isso é diferente da funcionalidade "Analisar com IA" **dentro do produto** — aquela é
+uma simulação (mock) de um fluxo de IA para fins do protótipo, implementada em
+`src/services/mockKnowledgeAI.js`, e não faz nenhuma chamada a uma API de IA real.
+
+## Deploy
+
+**Pendente.** O deploy na Vercel não foi feito nesta etapa — está planejado para uma próxima
+entrega. Por ora, o projeto deve ser avaliado rodando localmente com `npm install && npm run dev`.
+
+## Organização do projeto
 
 ```
 /
-├── index.html                     # Página inicial da aplicação
-├── INTEGRANTES.TXT                # Arquivo com os nomes e RMs dos integrantes
-├── README.md                      # Documentação do projeto
-├── .gitignore                     # Arquivos e pastas ignorados pelo Git
+├── index.html
+├── INTEGRANTES.TXT
+├── README.md
+├── package.json
 │
 └── src/
-    ├── assets/
-    │   └── imgs/
-    │       ├── buscando-texto.jpg              # Imagem utilizada durante a simulação de busca/OCR
-    │       ├── default-photo-text-found.jpg    # Imagem padrão com texto encontrado
-    │       ├── default-photo.jpg               # Imagem padrão exibida no scanner
-    │       └── resultado-encontrado.jpg        # Imagem utilizada para representar resultado encontrado
+    ├── main.jsx                    # Entry point, monta <App /> dentro de <BrowserRouter>
+    ├── App.jsx                     # Definição das rotas (react-router-dom)
     │
-    ├── css/
-    │   └── style.css              # Estilos globais da aplicação, responsividade e design system
+    ├── assets/imgs/                # Imagens usadas no slideshow e no scanner
     │
-    ├── js/
-    │   ├── camera.js              # Lógica da câmera, upload de imagem, OCR simulado e histórico
-    │   ├── history.js             # Navegação da tela de histórico inteligente mock
-    │   ├── login.js               # Validação de login, cadastro e sessão via localStorage
-    │   ├── main.js                # Funções gerais compartilhadas entre páginas
-    │   └── slideshow.js           # Controle do slideshow/carrossel da página inicial
+    ├── styles/
+    │   └── global.css              # Estilos globais (portado 1:1 do design system da Sprint 2)
     │
-    ├── pages/
-    │   ├── camera.html            # Página principal do scanner OCR
-    │   ├── history.html           # Página de histórico inteligente mock
-    │   └── login.html             # Página de login e cadastro
+    ├── context/
+    │   └── ToastContext.jsx        # Provider + hook de notificações toast (substitui showToast global)
     │
-    └── services/
-        └── mockKnowledgeAI.js      # Service mock para análise por imagem e histórico inteligente
+    ├── hooks/
+    │   └── useLocalStorage.js      # Hook genérico de estado sincronizado com localStorage
+    │
+    ├── services/
+    │   └── mockKnowledgeAI.js      # Service mock de análise por imagem e histórico inteligente
+    │
+    ├── utils/
+    │   └── format.js               # formatDate, truncate, relativeTime (Math.round/floor), cleanUserText
+    │
+    ├── components/
+    │   ├── layout/                 # Header (navbar + menu mobile), Footer, MainLayout
+    │   ├── ToastContainer.jsx
+    │   ├── ConfirmModal.jsx
+    │   ├── home/                   # Slideshow, FeatureCard, StepItem
+    │   ├── auth/                   # LoginForm, RegisterForm
+    │   ├── camera/                 # CameraViewfinder, OcrResultPanel, ScanHistoryPanel, AiAnalysisDrawer, TipsCard
+    │   └── history/                # TopicList, NodeList, DetailPanel, TopicChatDrawer
+    │
+    └── pages/
+        ├── Home.jsx                 # "/"
+        ├── Camera.jsx                # "/camera"
+        ├── History.jsx               # "/history"
+        └── Login.jsx                  # "/login"
 ```
 
-## Requisitos cumpridos
+## Requisitos cumpridos (Sprint 3 — Web Development)
 
-### Front-End Design
-
-- [x] Layout dinâmico e moderno com design system completo (tema claro, glassmorphism)
-- [x] HTML semântico (`header`, `nav`, `main`, `section`, `article`, `aside`, `footer`)
-- [x] Flexbox para posicionamento e estruturação de todos os layouts
-- [x] Design responsivo com breakpoints para mobile e tablet
-
-### Web Development
-
-- [x] Manipulação dinâmica de elementos e eventos DOM
-- [x] Validação de formulários — e-mail (regex), senha (mínimo, força), confirmação de senha, campos obrigatórios
-- [x] Login e cadastro com feedback inline de erros e persistência via `localStorage`
-- [x] Alertas e prompts customizados (toasts, modais de confirmação)
-- [x] Slideshow automático com 4 slides — suporte a swipe (touch) e teclado
-- [x] Eventos de usuário — click, input, blur, change, keydown, touchstart/end, dragover/drop
-- [x] Upload e leitura de imagem via `FileReader` API
-- [x] Simulação de OCR com efeito de varredura animado e typewriter progressivo
-- [x] Persistência de histórico via `localStorage`
+- [x] Migração do protótipo HTML/CSS/JS da Sprint 2 para **React**, com componentes funcionais e imports
+- [x] Estrutura de componentes pai → filho (Header/Footer compartilhados; páginas compostas por componentes menores)
+- [x] `localStorage` para armazenamento de dados (sessão de login, histórico de scans, histórico de análises IA), via hook próprio
+- [x] Operações com `Math`: `Math.random` (duração simulada do scan), `Math.abs` (detecção de swipe) e `Math.round`/`Math.floor` (tempo relativo no histórico, em `utils/format.js`)
+- [x] Projeto versionado no GitHub (herda o repositório já existente da Sprint 2)
+- [x] README com tecnologias, instalação, execução, usuário de teste e uso de IA
+- [ ] Deploy na Vercel — pendente (fora do escopo desta entrega)
