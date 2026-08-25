@@ -140,6 +140,9 @@ entrega. Por ora, o projeto deve ser avaliado rodando localmente com `npm instal
         └── Login.jsx                  # "/login"
 ```
 
+## Deploy na Vercel
+https://sprint-3-webdev-tan.vercel.app/
+
 ## Requisitos cumpridos (Sprint 3 — Web Development)
 
 - [x] Migração do protótipo HTML/CSS/JS da Sprint 2 para **React**, com componentes funcionais e imports
